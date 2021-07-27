@@ -12,7 +12,6 @@ id_city = [str(i).zfill(2) for i in range(1, 65)]
 id_default = [str(i).zfill(6) for i in range(1, 100000)]
 id_students = []
         
-scores = []
 early_stoppings = 0
 for i in id_city:
     for z in id_default:
@@ -25,14 +24,43 @@ for i in id_city:
             driver.get(url)
             
             student_score = driver.find_elements_by_css_selector('div.search-result-line')
-            temp = []
-            for j in student_score:
-                temp.append(j.text)
-            scores.append(temp)
-            if len(temp) == 0:
-                early_stoppings += 1
-            else:
-                early_stoppings = 0
+            temp = [''] * 14
+            for z in student_score:
+                if 'Toán' in z:
+                    temp[0] = z[-1]
+                elif 'Lí' in z:
+                    temp[1] = z[-1]
+                elif 'Hóa' in z:
+                    temp[2] = z[-1]
+                elif 'Sinh' in z:
+                    temp[3] = z[-1]
+                elif 'Sử' in z:
+                    temp[4] = z[-1]
+                elif 'Địa' in z:
+                    temp[5] = z[-1]
+                elif 'Văn' in z:
+                    temp[6] = z[-1]
+                elif 'GDCD' in z:
+                    temp[7] = z[-1]
+                elif 'Ngoại ngữ (N1)' in z:
+                    temp[8] = z[-1]
+                elif 'Ngoại ngữ (N2)' in z:
+                    temp[9] = z[-1]
+                elif 'Ngoại ngữ (N3)' in z:
+                    temp[10] = z[-1]
+                elif 'Ngoại ngữ (N4)' in z:
+                    temp[11] = z[-1]
+                elif 'Ngoại ngữ (N5)' in z:
+                    temp[12] = z[-1]
+                elif 'Ngoại ngữ (N6)' in z:
+                    temp[13] = z[-1]
+                else:
+                    continue
+            score = ','.join(temp)
+	    if temp == ['']*14:
+		early_stoppings += 1
+	    with open('diem_2021.csv', encoding='utf-8', mode='a') as file:
+                file.write(score)
 driver.close()
 
 end_scrape = time.time()
@@ -40,58 +68,3 @@ t = end_scrape-start_scrape
 print('Thời gian scrape: {} giờ {} phút {} giây'.format(
     int(t//3600), int((t-t//3600*3600)//60), int((t-t//3600*3600)%60))
 )
-
-def get_scores(scores, obj_name):
-    obj = []
-    for i in scores:
-        getted = False
-        for j in i:
-            if obj_name in j:
-                obj.append(j.split('\n')[-1])
-                getted = True
-        if getted == False:
-            obj.append(None)
-    return obj
-
-start_xuly = time.time()
-
-toan = get_scores(scores, 'Toán')
-van = get_scores(scores, 'Văn')
-su = get_scores(scores, 'Sử')
-dia = get_scores(scores, 'Địa')
-n1 = get_scores(scores, 'Ngoại ngữ (N1)')
-n2 = get_scores(scores, 'Ngoại ngữ (N2)')
-n3 = get_scores(scores, 'Ngoại ngữ (N3)')
-n4 = get_scores(scores, 'Ngoại ngữ (N4)')
-n5 = get_scores(scores, 'Ngoại ngữ (N5)')
-n6 = get_scores(scores, 'Ngoại ngữ (N6)')
-li = get_scores(scores, 'Lí')
-hoa = get_scores(scores, 'Hóa')
-sinh = get_scores(scores, 'Sinh')
-gdcd = get_scores(scores, 'GDCD')
-
-end_xuly = time.time()
-t = end_xuly-start_xuly
-print('Thời gian xử lý: {} giờ {} phút {} giây'.format(
-    int(t//3600), int((t-t//3600*3600)//60), int((t-t//3600*3600)%60))
-)
-
-final_scores = pd.DataFrame({
-	'SBD': id_students,
-	'Toán': toan,
-	'Văn': van,
-	'Sử': su,
-	'Địa': dia,
-	'N1': n1,
-	'N2': n2,
-	'N3': n3,
-	'N4': n4,
-	'N5': n5,
-	'N6': n6,
-	'Lí': li,
-	'Hóa': hoa,
-	'Sinh': sinh,
-	'GDCD': gdcd
-})
-
-final_scores.to_csv('final_score.csv', index=False)
