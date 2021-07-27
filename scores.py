@@ -14,7 +14,7 @@ id_students = []
         
 early_stoppings = 0
 for i in id_city:
-    for j in id_default[699999:]:
+    for j in id_default:
         if early_stoppings == 15:
             early_stoppings = 0
             break
