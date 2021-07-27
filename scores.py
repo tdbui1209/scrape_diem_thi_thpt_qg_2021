@@ -9,58 +9,64 @@ driver = webdriver.Chrome(r'C:\Users\tdbui\Desktop\chromedriver_win32\chromedriv
 driver.get('https://vietnamnet.vn/vn/giao-duc/tra-cuu-diem-thi-thpt/?y=2021&sbd=')
 
 id_city = [str(i).zfill(2) for i in range(1, 65)]
-id_default = [str(i).zfill(6) for i in range(1, 100000)]
+id_default = [str(i).zfill(6) for i in range(1, 999999)]
 id_students = []
         
 early_stoppings = 0
 for i in id_city:
-    for z in id_default:
+    for j in id_default[699999:]:
         if early_stoppings == 15:
+            early_stoppings = 0
             break
         else:
-            id_student = i+z
+            id_student = i+j
             id_students.append(id_student)
             url = 'https://vietnamnet.vn/vn/giao-duc/tra-cuu-diem-thi-thpt/?y=2021&sbd=' + id_student
             driver.get(url)
             
             student_score = driver.find_elements_by_css_selector('div.search-result-line')
-            temp = [''] * 14
-            for z in student_score:
+            temp = [''] * 15
+            temp[0] = id_student
+            for div in student_score:
+                z = div.text
                 if 'Toán' in z:
-                    temp[0] = z[-1]
-                elif 'Lí' in z:
                     temp[1] = z[-1]
-                elif 'Hóa' in z:
+                elif 'Lí' in z:
                     temp[2] = z[-1]
-                elif 'Sinh' in z:
+                elif 'Hóa' in z:
                     temp[3] = z[-1]
-                elif 'Sử' in z:
+                elif 'Sinh' in z:
                     temp[4] = z[-1]
-                elif 'Địa' in z:
+                elif 'Sử' in z:
                     temp[5] = z[-1]
-                elif 'Văn' in z:
+                elif 'Địa' in z:
                     temp[6] = z[-1]
-                elif 'GDCD' in z:
+                elif 'Văn' in z:
                     temp[7] = z[-1]
-                elif 'Ngoại ngữ (N1)' in z:
+                elif 'GDCD' in z:
                     temp[8] = z[-1]
-                elif 'Ngoại ngữ (N2)' in z:
+                elif 'Ngoại ngữ (N1)' in z:
                     temp[9] = z[-1]
-                elif 'Ngoại ngữ (N3)' in z:
+                elif 'Ngoại ngữ (N2)' in z:
                     temp[10] = z[-1]
-                elif 'Ngoại ngữ (N4)' in z:
+                elif 'Ngoại ngữ (N3)' in z:
                     temp[11] = z[-1]
-                elif 'Ngoại ngữ (N5)' in z:
+                elif 'Ngoại ngữ (N4)' in z:
                     temp[12] = z[-1]
-                elif 'Ngoại ngữ (N6)' in z:
+                elif 'Ngoại ngữ (N5)' in z:
                     temp[13] = z[-1]
+                elif 'Ngoại ngữ (N6)' in z:
+                    temp[14] = z[-1]
                 else:
                     continue
             score = ','.join(temp)
-	    if temp == ['']*14:
-		early_stoppings += 1
-	    with open('diem_2021.csv', encoding='utf-8', mode='a') as file:
-                file.write(score)
+            if temp[1:] == ['']*14:
+                early_stoppings += 1
+                continue
+            else:
+                early_stoppings = 0
+            with open('diem_2021.csv', encoding='utf-8', mode='a') as file:
+                file.write(score+'\n')
 driver.close()
 
 end_scrape = time.time()
