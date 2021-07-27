@@ -20,7 +20,7 @@ for i in id_city:
             break
         else:
             id_student = i+z
-            id_students.append(id_students)
+            id_students.append(id_student)
             url = 'https://vietnamnet.vn/vn/giao-duc/tra-cuu-diem-thi-thpt/?y=2021&sbd=' + id_student
             driver.get(url)
             
@@ -76,19 +76,22 @@ print('Thời gian xử lý: {} giờ {} phút {} giây'.format(
     int(t//3600), int((t-t//3600*3600)//60), int((t-t//3600*3600)%60))
 )
 
-final_scores = pd.DataFrame({'Toán': toan,
-	      'Văn': van,
-	      'Sử': su,
-	      'Địa': dia,
-	      'N1': n1,
-	      'N2': n2,
-	      'N3': n3,
-	      'N4': n4,
-	      'N5': n5,
-	      'N6': n6,
-	      'Lí': li,
-	      'Hóa': hoa,
-	      'Sinh': sinh,
-	      'GDCD': gdcd})
+final_scores = pd.DataFrame({
+	'SBD': id_students,
+	'Toán': toan,
+	'Văn': van,
+	'Sử': su,
+	'Địa': dia,
+	'N1': n1,
+	'N2': n2,
+	'N3': n3,
+	'N4': n4,
+	'N5': n5,
+	'N6': n6,
+	'Lí': li,
+	'Hóa': hoa,
+	'Sinh': sinh,
+	'GDCD': gdcd
+})
 
 final_scores.to_csv('final_score.csv', index=False)
