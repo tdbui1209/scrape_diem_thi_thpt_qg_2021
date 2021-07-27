@@ -28,7 +28,7 @@ for i in id_city:
             temp = [''] * 15
             temp[0] = id_student
             for div in student_score:
-                z = div.text
+                z = div.text.split('\n')
                 if 'Toán' in z:
                     temp[1] = z[-1]
                 elif 'Lí' in z:
